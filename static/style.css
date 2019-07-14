@@ -27,7 +27,7 @@ html, body {
   }
 
   #content {
-    height: inherit;
+    height: 95%!important;
   }
  
 }
@@ -36,6 +36,14 @@ html, body {
   height: 100px;
   background-color: chartreuse;
   width: 100%;
+}
+
+#messagebox {
+  height: 90%!important;
+}
+
+#textbox {
+  height: 10%!important;
 }
 
 .mainrow {
