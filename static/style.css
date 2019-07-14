@@ -1,0 +1,70 @@
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+#menu {
+  height: 100%;
+  background-color: mediumaquamarine;
+}
+.menustuff {
+  background-color: #0d48a6;
+  /*height: 300px;*/
+}
+
+/*only for small screens*/
+@media only screen and (max-width: 768px) {
+  
+  .menustuff {
+    background-color: yellow!important;
+    /*height: 40px;*/
+  }
+
+  #menu {
+    height: fit-content;
+    background-color: red;
+  }
+
+  #content {
+    height: inherit;
+  }
+ 
+}
+
+#textinput {
+  height: 100px;
+  background-color: chartreuse;
+  width: 100%;
+}
+
+.mainrow {
+  min-height: 100%;
+  height: 100%;
+}
+
+.mainbody { 
+  background-color: hotpink;
+  height: 100%;
+}
+
+/* unvisited link */
+a:link {
+    color: red;
+  }
+  
+  /* visited link */
+  a:visited {
+    color: green;
+  }
+  
+  /* mouse over link */
+  a:hover {
+    color: hotpink;
+  }
+  
+  /* selected link */
+  a:active {
+    color: black;
+  }
+
