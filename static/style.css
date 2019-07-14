@@ -6,10 +6,10 @@ html, body {
 
 #menu {
   height: 100%;
-  background-color: mediumaquamarine;
+  background-color: #0d48a6;
 }
 .menustuff {
-  background-color: #0d48a6;
+  /*background-color: #0d48a6;*/
   /*height: 300px;*/
 }
 
@@ -17,33 +17,45 @@ html, body {
 @media only screen and (max-width: 768px) {
   
   .menustuff {
-    background-color: yellow!important;
+    /*background-color: yellow!important;*/
     /*height: 40px;*/
   }
 
   #menu {
     height: fit-content;
-    background-color: red;
+    /*background-color: red;*/
   }
 
   #content {
-    height: 95%!important;
+    height: 92%!important;
   }
  
 }
 
-#textinput {
-  height: 100px;
-  background-color: chartreuse;
-  width: 100%;
+#content {
+  height: inherit;
 }
 
 #messagebox {
-  height: 90%!important;
+  height: 93%!important;
+  overflow: auto
 }
 
 #textbox {
-  height: 10%!important;
+  height: 7%!important;
+}
+
+.messagetime {
+  /*
+  TODO: FIX TIME STAMP TEXT POSITION
+  position: absolute;
+  font-size: small;
+  margin-right: 4px;
+  bottom: 0;
+  right: 0;*/
+}
+.alert{
+width: fit-content;
 }
 
 .mainrow {
@@ -52,9 +64,11 @@ html, body {
 }
 
 .mainbody { 
-  background-color: hotpink;
+  /*background-color: hotpink;*/
   height: 100%;
 }
+
+
 
 /* unvisited link */
 a:link {

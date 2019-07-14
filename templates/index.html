@@ -17,11 +17,15 @@
     <!-- Two columns for layout, on small screens they stack -->
     <div class="container-fluid mainbody">
         <div class="row mainrow">
-            <div id="menu" class="col-md-2">
-                <div class="menustuff">
-                    MENU HERE
-                    <button aria-controls="nav" aria-expanded="true" class="btn btn-sm d-md-none btn-primary"
-                        data-target="nav" data-toggle="collapse">Channels</button>
+            <div id="menu" class="col-md-2 p-1">
+                <div class="menustuff text-white">
+                    <div class="d-flex">
+                            <div class="p-0"><H4>QuickChat</H4></div>
+                            <div class="ml-auto mt-1 p-0"><button aria-controls="nav" aria-expanded="true" class="btn btn-sm d-md-none btn-primary"
+                                data-target="nav" data-toggle="collapse">Channels</button></div>
+                    </div>
+                    
+                    
                     <nav class="collapse d-md-block">
                         <hr>
                         <ul>
@@ -38,7 +42,7 @@
                         </ul>
                         <hr>
                         <ul>
-                            <li><a href="#">Link</a></li>
+                            <li><a href="#">Link <span class="badge badge-warning disabled">4</span></a></li>
                             <li>Items</li>
                             <li><a href="#">Link</a></li>
                             <li>Items</li>
@@ -50,17 +54,79 @@
                     </nav>
                 </div>
             </div>
-            <div id="content" class="col-md-10 bg-dark">
-                    <div class="row h-100">
-                            <div id = "messagebox" class="col-12 h-75 bg-success">
-                              Level 2: .col-8 .col-sm-6
+            <div id="content" class="col-md-10">
+                <div class="row h-100">
+                    <div id="messagebox" class="col-12 h-75">
+                        <!--Start of a message -->
+                        <div class="alert alert-primary mt-2 mb-0" role="alert">
+                            <h6 class="alert-heading">Jeff</h6>
+                            <p>Hey!</p>
+                            <div class="messagetime">1:47 PM 7/14/2019</div>
+                        </div>
+                        <!-- End of a message -->
+                        <!--Start of a message -->
+                        <div class="alert alert-primary mt-2 mb-0" role="alert">
+                                <h6 class="alert-heading">User-2</h6>
+                                <p>Aww yeah, you successfully read this.</p>
+                                <div class="messagetime">1:47 PM 7/14/2019</div>
                             </div>
-                            <div id = "textbox" class="col-12 h-25 bg-warning">
-                              Level 2: .col-4 .col-sm-6
-            </div>
-        </div>
-        {% block body %}
-        {% endblock %}
+                        <!-- End of a message -->
+                        <!--Start of a message -->
+                        <div class="alert alert-primary mt-2 mb-0" role="alert">
+                                <h6 class="alert-heading">User-2</h6>
+                                <p>Aww yeah, you successfully read this important alert message. This example text is going
+                                    to run a bit longer so that you can see how spacing within an alert works with this kind
+                                    of content.</p>
+                                <div class="messagetime">1:47 PM 7/14/2019</div>
+                            </div>
+                        <!-- End of a message -->
+                        <!--Start of a message -->
+                        <div class="alert alert-primary mt-2 mb-0" role="alert">
+                                <h6 class="alert-heading">Jeff</h6>
+                                <p>Hey!</p>
+                                <div class="messagetime">1:47 PM 7/14/2019</div>
+                            </div>
+                            <!-- End of a message -->
+                            <!--Start of a message -->
+                            <div class="alert alert-primary mt-2 mb-0" role="alert">
+                                    <h6 class="alert-heading">User-2</h6>
+                                    <p>Aww yeah, you successfully read this.</p>
+                                    <div class="messagetime">1:47 PM 7/14/2019</div>
+                                </div>
+                            <!-- End of a message -->
+                            <!--Start of a message -->
+                            <div class="alert alert-primary mt-2 mb-0" role="alert">
+                                    <h6 class="alert-heading">User-2</h6>
+                                    <p>Aww yeah, you successfully read this important alert message. This example text is going
+                                        to run a bit longer so that you can see how spacing within an alert works with this kind
+                                        of content.</p>
+                                    <div class="messagetime">1:47 PM 7/14/2019</div>
+                                </div>
+                            <!-- End of a message -->
+                    </div>
+                    <div id="textbox" class="col-12 h-25 bg-light">
+                        <div class="input-group mb-3 align-self-center">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#">Action</a>
+                                    <a class="dropdown-item" href="#">Another action</a>
+                                    <a class="dropdown-item" href="#">Something else here</a>
+                                    <div role="separator" class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Separated link</a>
+                                </div>
+                            </div>
+                            <input type="text" class="form-control" name="message" placeholder="Type a message"
+                                aria-label="message" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button">Send!</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% block body %}
+                {% endblock %}
 </body>
 
 </html>
