@@ -70,23 +70,23 @@ width: fit-content;
 
 
 
-/* unvisited link */
+/* unvisited link 
 a:link {
-    color: red;
+    color: white;
   }
   
-  /* visited link */
+  /* visited link 
   a:visited {
-    color: green;
+    color: white;
   }
   
-  /* mouse over link */
+  /* mouse over link 
   a:hover {
-    color: hotpink;
+    color: burlywood;
   }
   
-  /* selected link */
+  /* selected link 
   a:active {
-    color: black;
+    color: white;
   }
-
+*/
