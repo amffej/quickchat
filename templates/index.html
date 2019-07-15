@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css"
         integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='sockets.js') }}"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
@@ -32,17 +34,23 @@
 
                     <nav class="collapse d-md-block mt-2">
                         <div class="list-group">
-                            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <a href="#"
+                                class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                                 Main Group
-                                <span class="badge badge-primary badge-pill d-flex justify-content-between align-items-center">14</span>
+                                <span
+                                    class="badge badge-primary badge-pill d-flex justify-content-between align-items-center">14</span>
                             </a>
-                            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <a href="#"
+                                class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                                 Class Projects
-                                <span class="badge badge-primary badge-pill d-flex justify-content-between align-items-center">2</span>
+                                <span
+                                    class="badge badge-primary badge-pill d-flex justify-content-between align-items-center">2</span>
                             </a>
-                            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <a href="#"
+                                class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                                 HomeWork
-                                <span class="badge badge-primary badge-pill d-flex justify-content-between align-items-center">1</span>
+                                <span
+                                    class="badge badge-primary badge-pill d-flex justify-content-between align-items-center">1</span>
                             </a>
                             <a href="#" class="list-group-item list-group-item-action">
                                 + New Group
@@ -111,26 +119,29 @@
                         <!-- End of a message -->
                     </div>
                     <div id="textbox" class="col-12 h-25">
-                        <div class="input-group mb-3 align-self-center">
-                            <div class="input-group-prepend">
-                                <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">User-XX</button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="#">Changer User Name</a>
-                                    <a class="dropdown-item" href="#">Something else</a>
-                                    <a class="dropdown-item" href="#">Something else here</a>
-                                    <div role="separator" class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Separated link</a>
+                            <div class="input-group mb-3 align-self-center">
+                                <div class="input-group-prepend">
+                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                                        data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false">User-XX</button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#">Changer User Name</a>
+                                        <a class="dropdown-item" href="#">Something else</a>
+                                        <a class="dropdown-item" href="#">Something else here</a>
+                                        <div role="separator" class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="#">Separated link</a>
+                                    </div>
+                                </div>
+                                <input type="text" class="form-control" name="message" id="message" placeholder="Type a message" value="">
+                                <div class="input-group-append">
+                                    <button id="sendmessage" class="btn btn-outline-secondary" type="button">Send!</button>
                                 </div>
                             </div>
-                            <input type="text" class="form-control" name="message" placeholder="Type a message"
-                                aria-label="message" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="button">Send!</button>
-                            </div>
-                        </div>
                     </div>
                 </div>
+                <ul id="temp">
+                    </ul>
+                    <hr>
                 {% block body %}
                 {% endblock %}
 </body>
