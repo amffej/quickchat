@@ -12,7 +12,7 @@
         integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
-    <script src="{{ url_for('static', filename='sockets.js') }}"></script>
+    <script src="{{ url_for('static', filename='index.js') }}"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
@@ -80,31 +80,68 @@
                          End of a message -->
                     </div>
                     <div id="textbox" class="col-12 h-25">
-                            <div class="input-group mb-3 align-self-center">
-                                <div class="input-group-prepend">
-                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-                                        data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false">User-XX</button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#">Changer User Name</a>
-                                        <a class="dropdown-item" href="#">Something else</a>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                        <div role="separator" class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Separated link</a>
-                                    </div>
-                                </div>
-                                <input type="text" class="form-control" name="message" id="message" placeholder="Type a message" value="">
-                                <div class="input-group-append">
-                                    <button id="sendmessage" class="btn btn-outline-secondary" type="button">Send!</button>
+                        <div class="input-group mb-3 align-self-center">
+                            <div class="input-group-prepend">
+                                <button type="button"
+                                    class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#">Changer User Name</a>
+                                    <a class="dropdown-item" href="#">Something else</a>
+                                    <a class="dropdown-item" href="#">Something else here</a>
+                                    <div role="separator" class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Separated link</a>
                                 </div>
                             </div>
+                            <input type="text" class="form-control" name="message" id="message"
+                                placeholder="Type a message" value="">
+                            <div class="input-group-append">
+                                <button id="sendmessage" class="btn btn-outline-secondary" type="button">Send!</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <ul id="temp">
-                    </ul>
-                    <hr>
-                {% block body %}
-                {% endblock %}
+                </ul>
+                <hr>
+
+                <!-- Username - Modal -->
+                <div class="modal fade" id="usernameEntry">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">Enter Username!</h4>
+                                <!--button type="button" class="close" data-dismiss="modal">×</button-->
+                            </div>
+
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">@</span>
+                                    </div>
+                                    <input type="text" id="username" class="form-control" placeholder="Username"
+                                        aria-label="Username" aria-describedby="basic-addon1">
+                                    <div id="userError" class="invalid-feedback"></div>
+                                </div>
+                            </div>
+
+                            <!-- Modal footer -->
+                            <div class="modal-footer">
+                                <button id="saveUser" type="button" class="btn btn-primary">Save</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            {% block body %}
+            {% endblock %}
 </body>
 
 </html>

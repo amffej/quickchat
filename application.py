@@ -7,6 +7,7 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
+channels = []
 
 @app.route("/")
 def index():
@@ -14,7 +15,12 @@ def index():
     return render_template("index.html")
 
 @socketio.on("submit message")
+
 def vote(data):
-    selection = data["selection"]
-    print(selection);
-    emit("announce message", {"selection": selection}, broadcast=True)
+    #PUBLISH PUBLIC MESSAGES
+    message = data["message"]
+    username = data["username"] 
+    #print(selection);
+    emit("announce message", {"username": username, "message": message}, broadcast=True)
+    
+    #TODO PUBLISH PRIVATE MESSAGES
