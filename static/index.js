@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+//TODO GENERATE CHANNEL LIST
+//ADD CHANNEL REFRESH BUTTON
 
     //Check if a username was created
     if (localStorage.getItem("username") == null) {
@@ -44,12 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Connect to websocket
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
-    // When connected, configure buttons
+    // When connected
     socket.on('connect', () => {
 
-        var username = localStorage.getItem("username");
         
         function txMessage() {
+            const username = localStorage.getItem("username");
             let message = document.querySelector("#message").value;
             if (message !== "") {
                 socket.emit('submit message', {"username": username, "message": message});
