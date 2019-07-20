@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             if (validateUsername(username)) {
                 localStorage.setItem("username", username.value);
-                $('#saveUser').modal('hide');
+                //$('#saveUser').modal('hide');
                 $('#usernameEntry').modal('hide');
             }
             else {
@@ -42,6 +42,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    document.querySelector("#saveChannel").onclick = () => {
+        var channelname = document.querySelector("#channelname");
+        if (channelname.value == "") {
+            channelname.className = "form-control is-invalid";
+            var alertfeeback = document.querySelector("#channelError");
+            alertfeeback.innerHTML = "Please enter a channel name";
+        } else {
+            if (validatechannel(channelname)) {
+                //TODO QUERY SERVER
+                getChannels();
+                $('#channelEntry').modal('hide');
+            }
+            else {
+                channelname.className = "form-control is-invalid";
+                var alertfeeback = document.querySelector("#channelError");
+                alertfeeback.innerHTML = "Only alphanumeric and at least 4 characters!";
+            }
+            function validatechannel(channelname) {
+                var letters = /^[A-Za-z]+$/;
+                if (channelname.value.match(letters) && channelname.value.length > 3) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+        }
+
+    }
     function getChannels() {
 
         const Http = new XMLHttpRequest();
@@ -50,15 +79,20 @@ document.addEventListener('DOMContentLoaded', () => {
         Http.send();
         Http.onload = () => {
             const data = JSON.parse(Http.responseText);
+            const currentChannel = localStorage.getItem("channel");
             document.querySelector('#channellist').innerHTML = "";
             for (var key in data) {
-                const content = template({ 'channelurl': data[key].id, 'channelname': data[key].channel, 'unreadmessages': 0 });
+                var active = "";
+                if (currentChannel == data[key].id) {
+                    active = "active";
+                }
+                const content = template({ 'channelurl': data[key].id, 'channelname': data[key].channel, 'unreadmessages': 0, 'isactive': active });
                 document.querySelector('#channellist').innerHTML += content;
             }
             document.querySelectorAll('.list-group-item').forEach(button => {
-                button.onclick = () => { 
+                button.onclick = () => {
                     localStorage.setItem("channel", button.dataset.channel);
-                    //TODO ADD ACTION FOR WHEN CHANNEL GETS CLICKED;
+                    getChannels();
                 };
             });
         };
@@ -80,24 +114,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
             }
         }
-
+        // Detect refresh channels button press
         document.querySelector("#refreshbutton").onclick = () => {
             getChannels();
         };
-
-        // Detect button press
+        // Detect create channel button press
+        document.querySelector("#createchannel").onclick = () => {
+            var channelname = document.querySelector("#channelname");
+            channelname.className = "form-control";
+            var alertfeeback = document.querySelector("#userError");
+            alertfeeback.innerHTML = "";
+            channelname.value = ""
+            $('#channelEntry').modal();
+        }
+        // Detect send message button press
         document.querySelector("#sendmessage").onclick = () => {
             txMessage();
         };
-        //Detect Enter Key
+        //Detect Enter Key press
         document.addEventListener('keypress', () => {
             if (event.key === "Enter") {
                 txMessage();
                 $('#myModal').modal()
             }
         });
-
-
     });
 
     // Annouce messace to everyone

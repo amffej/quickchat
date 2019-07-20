@@ -16,7 +16,7 @@
     <script src="{{ url_for('static', filename='index.js') }}"></script>
     {% raw %}
     <script id="channels" type="text/template">
-        <button type="button" data-channel="{{ channelurl }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">{{ channelname }}<span
+        <button type="button" data-channel="{{ channelurl }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center {{ isactive }}">{{ channelname }}<span
              class="badge badge-primary badge-pill d-flex justify-content-between align-items-center">{{ unreadmessages }}</span></button>
         </script>
     {% endraw %}
@@ -132,6 +132,39 @@
                 </div>
 
             </div>
+            <!-- Channel - Modal -->
+            <div class="modal fade" id="channelEntry">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">Enter Channel!</h4>
+                            <button type="button" class="close" data-dismiss="modal">×</button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">#</span>
+                                </div>
+                                <input type="text" id="channelname" class="form-control" placeholder="Channel Name"
+                                    aria-label="channelname" aria-describedby="basic-addon1">
+                                <div id="channelError" class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button id="saveChannel" type="button" class="btn btn-primary">Create</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
             {% block body %}
             {% endblock %}
 </body>
