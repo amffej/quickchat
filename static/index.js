@@ -10,62 +10,67 @@ document.addEventListener('DOMContentLoaded', () => {
         //localStorage.getItem("lastname");
         //localStorage.setItem("lastname", "Smith");
     }
+
+    function validateInput(input, minlen, allowspace) {
+        
+        if(allowspace)
+        {
+            var letters = /^[A-Za-z\d\s]+$/;
+        }else{
+            var letters = /^[A-Za-z\d]+$/;
+        }
+        
+        if (input.value.match(letters) && input.value.length > minlen) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     document.querySelector("#saveUser").onclick = () => {
 
         var username = document.querySelector("#username");
 
-        if (username.value == "") {
+        if (validateInput(username, 2, false)) {
+            localStorage.setItem("username", username.value);
+            $('#usernameEntry').modal('hide');
+        }
+        else {
             username.className = "form-control is-invalid";
             var alertfeeback = document.querySelector("#userError");
-            alertfeeback.innerHTML = "Please enter a user name";
-        } else {
-            if (validateUsername(username)) {
-                localStorage.setItem("username", username.value);
-                //$('#saveUser').modal('hide');
-                $('#usernameEntry').modal('hide');
-            }
-            else {
-                username.className = "form-control is-invalid";
-                var alertfeeback = document.querySelector("#userError");
-                alertfeeback.innerHTML = "Only alphanumeric and at least 3 characters!";
-            }
-
-            function validateUsername(username) {
-                var letters = /^[A-Za-z]+$/;
-                if (username.value.match(letters) && username.value.length > 2) {
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            }
+            alertfeeback.innerHTML = "Only alphanumeric and at least 3 characters!";
         }
     };
 
     document.querySelector("#saveChannel").onclick = () => {
         var channelname = document.querySelector("#channelname");
-        if (channelname.value == "") {
+        if (validateInput(channelname, 3, true)) {
+            createChannel(channelname.value);    
+            } else {
             channelname.className = "form-control is-invalid";
             var alertfeeback = document.querySelector("#channelError");
-            alertfeeback.innerHTML = "Please enter a channel name";
-        } else {
-            if (validatechannel(channelname)) {
-                //TODO QUERY SERVER
-                getChannels();
-                $('#channelEntry').modal('hide');
-            }
-            else {
-                channelname.className = "form-control is-invalid";
-                var alertfeeback = document.querySelector("#channelError");
-                alertfeeback.innerHTML = "Only alphanumeric and at least 4 characters!";
-            }
-            function validatechannel(channelname) {
-                var letters = /^[A-Za-z]+$/;
-                if (channelname.value.match(letters) && channelname.value.length > 3) {
-                    return true;
-                }
-                else {
-                    return false;
+            alertfeeback.innerHTML = "Only alphanumeric and at least 4 characters!";
+        }
+        function createChannel(channelname) {
+            
+            const Http = new XMLHttpRequest();
+            const url = '/createchannel?channelname='+channelname;
+            Http.open("GET", url);
+            //const formdata = new FormData();
+            //formdata.append('channelname', channelname);
+            Http.send();
+            Http.onload = () => {
+                const data = JSON.parse(Http.responseText);
+                //console.log(data);
+                if (data.success) {
+                    getChannels();
+                    $('#channelEntry').modal('hide');
+                } else {
+                    var channelname = document.querySelector("#channelname");
+                    channelname.className = "form-control is-invalid";
+                    var alertfeeback = document.querySelector("#channelError");
+                    alertfeeback.innerHTML = "Problem creating channel, Name might be taken!";
                 }
             }
         }

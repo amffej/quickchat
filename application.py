@@ -34,15 +34,17 @@ def getchannels():
 @app.route("/createchannel", methods=["GET"])
 def createchannel():
     channelname = request.args.get("channelname")
-    print(channelname)
+    #print(channelname)
+    json_output = []
     lastID = channels[-1][0]
     newID = lastID + 1
+    if channelname is None:
+         return jsonify({"success": False, "reason": "Empty"})
     for a, b in channels:
         if(b == channelname):
-            return ("Channel Taken")
+            return jsonify({"success": False, "reason": "Taken"}) 
     channels.append(tuple((newID, channelname)))
-    return (f"Channel ID: {newID} Channel name: {channelname}")
-
+    return jsonify({"success": True, "id": newID, "channel": channelname})
 
 @app.route("/")
 def index():
