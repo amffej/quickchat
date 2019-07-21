@@ -1,4 +1,3 @@
-
 html, body {
   height: 100%;
   margin: 0;
@@ -8,22 +7,12 @@ html, body {
   height: 100%;
   background-color: #0d48a6;
 }
-.menustuff {
-  /*background-color: #0d48a6;*/
-  /*height: 300px;*/
-}
 
 /*only for small screens*/
 @media only screen and (max-width: 768px) {
-  
-  .menustuff {
-    /*background-color: yellow!important;*/
-    /*height: 40px;*/
-  }
 
   #menu {
     height: fit-content;
-    /*background-color: red;*/
   }
 
   #content {
@@ -45,15 +34,6 @@ html, body {
   height: 7%!important;
 }
 
-.messagetime {
-  /*
-  TODO: FIX TIME STAMP TEXT POSITION
-  position: absolute;
-  font-size: small;
-  margin-right: 4px;
-  bottom: 0;
-  right: 0;*/
-}
 .alert{
 width: fit-content;
 }
@@ -64,29 +44,5 @@ width: fit-content;
 }
 
 .mainbody { 
-  /*background-color: hotpink;*/
   height: 100%;
 }
-
-
-
-/* unvisited link 
-a:link {
-    color: white;
-  }
-  
-  /* visited link 
-  a:visited {
-    color: white;
-  }
-  
-  /* mouse over link 
-  a:hover {
-    color: burlywood;
-  }
-  
-  /* selected link 
-  a:active {
-    color: white;
-  }
-*/
