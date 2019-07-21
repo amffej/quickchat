@@ -4,7 +4,7 @@
 
 ## Objective
 
-The goal if this project was to build an online messaging service using Flask. The application was to be designed similar in spirit such as Slack. The users should have the ability to sing into the site with a display name, create channels to communicate in, as well as see existing channels. Once the user selects a channel, they should be able to see previous messages within that channel as well as send and receive messages with other users in the channel in real time.
+The goal of this project was to build an online messaging service using Flask. The application was to be designed similar in spirit such as Slack. The users should have the ability to sign into the site with a display name, create channels to communicate in, as well as see existing channels. Once the user selects a channel, they should be able to see previous messages within that channel as well as send and receive messages with other users in the channel in real time.
 
 ### File Structure
 
@@ -30,4 +30,4 @@ project2-jeffmaldo27/
 * Unread message counters - Badge showing unread messages per channel (Personal Touch)
 * Save up to 100 messages per channel
 * User can create custom channels
-* No need to sign in browser is closed
+* No need to sign in again if browser is closed
