@@ -4,16 +4,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     localStorage.setItem("channel", 1);
     loadChannelMessages(1);
-    //Check if a username was created
+  
+    //Check if a username was already created
     if (localStorage.getItem("username") == null) {
         $('#usernameEntry').modal({
             backdrop: "static",
             keyboard: false
         });
-        //localStorage.getItem("lastname");
-        //localStorage.setItem("lastname", "Smith");
     }
 
+    //validate a string against a regex (used for display name and for channel name)
     function validateInput(input, minlen, allowspace) {
 
         if (allowspace) {
@@ -24,12 +24,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (input.value.match(letters) && input.value.length > minlen) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
+    //when user clicks save on display name form
     document.querySelector("#saveUser").onclick = () => {
 
         var username = document.querySelector("#username");
@@ -37,14 +37,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (validateInput(username, 2, false)) {
             localStorage.setItem("username", username.value);
             $('#usernameEntry').modal('hide');
-        }
-        else {
+        } else {
             username.className = "form-control is-invalid";
             var alertfeeback = document.querySelector("#userError");
             alertfeeback.innerHTML = "Only alphanumeric and at least 3 characters!";
         }
     };
 
+    //when user clicks save on channel name form
     document.querySelector("#saveChannel").onclick = () => {
         var channelname = document.querySelector("#channelname");
         if (validateInput(channelname, 3, true)) {
@@ -54,8 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
             var alertfeeback = document.querySelector("#channelError");
             alertfeeback.innerHTML = "Only alphanumeric and at least 4 characters!";
         }
-        function createChannel(channelname) {
 
+        //try and create new channel
+        function createChannel(channelname) {
             const Http = new XMLHttpRequest();
             const url = '/createchannel?channelname=' + channelname;
             Http.open("GET", url);
@@ -75,8 +76,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
     }
-    function getChannels() {
 
+    //updates the channel list on the menu
+    function getChannels() {
         const Http = new XMLHttpRequest();
         const url = '/getchannels';
         Http.open("GET", url);
@@ -95,7 +97,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (channelUnread == 0 || channelUnread == null) {
                     unreadvisible = "invisible";
                 }
-                const content = channelTemplate({ 'channelurl': data[key].id, 'channelname': data[key].channel, 'unreadmessages': channelUnread, 'isactive': active, 'visibility': unreadvisible });
+                const content = channelTemplate({
+                    'channelurl': data[key].id,
+                    'channelname': data[key].channel,
+                    'unreadmessages': channelUnread,
+                    'isactive': active,
+                    'visibility': unreadvisible
+                });
                 document.querySelector('#channellist').innerHTML += content;
             }
             document.querySelectorAll('.list-group-item').forEach(button => {
@@ -112,6 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     };
 
+    //loads server stored messages to channel window
     function loadChannelMessages(channel) {
         document.querySelector('#messagebox').innerHTML = "";
         const Http = new XMLHttpRequest();
@@ -127,32 +136,44 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem(channel, 0);
     }
 
+    //adds a single message to the messagebox div
     function publishMessage(username, message, timestamp) {
-        const content = messageTemplate({ 'username': username, 'message': message, 'timestamp': timestamp });
+        const content = messageTemplate({
+            'username': username,
+            'message': message,
+            'timestamp': timestamp
+        });
         var messagesDiv = document.querySelector('#messagebox');
         messagesDiv.innerHTML += content;
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
+
     // Connect to websocket
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
     // When connected
     socket.on('connect', () => {
 
+        // send message to server side
         function txMessage() {
             const username = localStorage.getItem("username");
             const channel = localStorage.getItem("channel");
             let message = document.querySelector("#message").value;
             if (message !== "") {
-                socket.emit('submit message', { "channel": channel, "username": username, "message": message });
+                socket.emit('submit message', {
+                    "channel": channel,
+                    "username": username,
+                    "message": message
+                });
                 document.querySelector("#message").value = "";
-
             }
         }
+
         // Detect refresh channels button press
         document.querySelector("#refreshbutton").onclick = () => {
             getChannels();
         };
+
         // Detect create channel button press
         document.querySelector("#createchannel").onclick = () => {
             var channelname = document.querySelector("#channelname");
@@ -162,13 +183,14 @@ document.addEventListener('DOMContentLoaded', () => {
             channelname.value = ""
             $('#channelEntry').modal();
         }
+
         // Detect send message button press
         document.querySelector("#sendmessage").onclick = () => {
             txMessage();
         };
 
         // Detect if screen is clicked and collape menu on mobile
-        $('#messagebox').click(function () {
+        $('#messagebox').click(function() {
             if (window.screen.width < 768) {
                 $('.collapse').collapse("toggle");
             }
@@ -185,8 +207,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Annouce messace to everyone
     socket.on('announce message', data => {
-
-        //var username = localStorage.getItem("username");
         var username = data.username;
         var currentChannel = localStorage.getItem("channel");
         if (data.channel == currentChannel) {

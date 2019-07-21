@@ -7,11 +7,17 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
+# Channel name storage variable, start with two dummy channels
 channels = [(1, 'Main Channel'), (2, 'Side Channel')]
-# allmessages = [(1,'jeff', 'This is a message','9:46 7/18/2019'), (2,'user2', 'this is another message, a much longer message','9:46 7/18/2019'), (1,'user3', 'hey, this is just random text place here','9:46 7/18/2019'),(1,'jeff', 'This is a message','9:46 7/18/2019'), (2,'user2', 'this is another message, a much longer message','9:46 7/18/2019'), (1,'user3', 'hey, this is just random text place here','9:46 7/18/2019')]
+# Messaged storage variable
 allmessages = []
 
+# Main landing page
+@app.route("/")
+def index():
+    return render_template("index.html")
 
+# route used to pull all messages for a given channel in json format
 @app.route("/getmessages", methods=["GET"])
 def getmessages():
     channel = request.args.get("channel")
@@ -22,19 +28,18 @@ def getmessages():
                 {'channel': a, 'username': b, 'message': c, 'timestamp': d})
     return (jsonify(json_output))
 
-
-@app.route("/getchannels", methods=["GET", "POST"])
+# route used to pull list of all channels in json format
+@app.route("/getchannels", methods=["GET"])
 def getchannels():
     json_output = []
     for a, b in channels:
         json_output.append({'id': a, 'channel': b})
     return (jsonify(json_output))
 
-
+# route used to create a new channel, returns creation status in json format
 @app.route("/createchannel", methods=["GET"])
 def createchannel():
     channelname = request.args.get("channelname")
-    # print(channelname)
     json_output = []
     lastID = channels[-1][0]
     newID = lastID + 1
@@ -46,13 +51,7 @@ def createchannel():
     channels.append(tuple((newID, channelname)))
     return jsonify({"success": True, "id": newID, "channel": channelname})
 
-
-@app.route("/")
-def index():
-    # return ("OK")
-    return render_template("index.html")
-
-
+#socket used for receving and publishing messages, also monitors 100 message limit
 @socketio.on("submit message")
 def vote(data):
     # PUBLISH PUBLIC MESSAGES
