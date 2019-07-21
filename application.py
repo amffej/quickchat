@@ -1,5 +1,5 @@
 import os
-
+import datetime
 from flask import Flask, render_template, json, jsonify, request
 from flask_socketio import SocketIO, emit
 
@@ -15,12 +15,12 @@ allmessages = []
 @app.route("/getmessages", methods=["GET"])
 def getmessages():
     channel = request.args.get("channel")
-    messages = []
+    json_output = []
     for a, b, c, d in allmessages:
         if (a == int(channel)):
-            messages.append(tuple((a, b, c, d)))
-    json_ouput = jsonify(messages)
-    return (json_ouput)
+            json_output.append(
+                {'channel': a, 'username': b, 'message': c, 'timestamp': d})
+    return (jsonify(json_output))
 
 
 @app.route("/getchannels", methods=["GET", "POST"])
@@ -34,17 +34,18 @@ def getchannels():
 @app.route("/createchannel", methods=["GET"])
 def createchannel():
     channelname = request.args.get("channelname")
-    #print(channelname)
+    # print(channelname)
     json_output = []
     lastID = channels[-1][0]
     newID = lastID + 1
     if channelname is None:
-         return jsonify({"success": False, "reason": "Empty"})
+        return jsonify({"success": False, "reason": "Empty"})
     for a, b in channels:
         if(b == channelname):
-            return jsonify({"success": False, "reason": "Taken"}) 
+            return jsonify({"success": False, "reason": "Taken"})
     channels.append(tuple((newID, channelname)))
     return jsonify({"success": True, "id": newID, "channel": channelname})
+
 
 @app.route("/")
 def index():
@@ -58,12 +59,15 @@ def vote(data):
     message = data["message"]
     username = data["username"]
     channel = int(data["channel"])
-    print("received")
-    print(channel)
-    # TODO FIX TIME STAMP AND GET CHANNEL INPUT
-    timestamp = "stamphere"
-    allmessages.append(tuple((channel,username,message,timestamp)))
-    # print(selection);
-    emit("announce message", {"username": username, "message": message}, broadcast=True)
+    timestamp = datetime.datetime.now().strftime('%H:%M %p %m/%d/%y')
+    allmessages.append(tuple((channel, username, message, timestamp)))
+    emit("announce message", {"username": username,"message": message, "channel": channel, "timestamp": timestamp}, broadcast=True)
+    cleanMessages(channel)
     
-    # TODO PUBLISH PRIVATE MESSAGES
+# If more than 100 messages in channel remove oldest message of channel
+def cleanMessages(channel):
+    totalmessages = len([message for message in allmessages if message[0] == int(channel)])
+    if totalmessages > 100:
+        firstmessage = next((message for message in allmessages if message[0] == int(channel)))
+        allmessages.remove(firstmessage) 
+

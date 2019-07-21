@@ -1,6 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const template = Handlebars.compile(document.querySelector('#channels').innerHTML);
+    const channelTemplate = Handlebars.compile(document.querySelector('#channels').innerHTML);
+    const messageTemplate = Handlebars.compile(document.querySelector('#newmessage').innerHTML);
+
     localStorage.setItem("channel", 1);
+    loadChannelMessages(1);
     //Check if a username was created
     if (localStorage.getItem("username") == null) {
         $('#usernameEntry').modal({
@@ -12,14 +15,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function validateInput(input, minlen, allowspace) {
-        
-        if(allowspace)
-        {
+
+        if (allowspace) {
             var letters = /^[A-Za-z\d\s]+$/;
-        }else{
+        } else {
             var letters = /^[A-Za-z\d]+$/;
         }
-        
+
         if (input.value.match(letters) && input.value.length > minlen) {
             return true;
         }
@@ -46,23 +48,20 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector("#saveChannel").onclick = () => {
         var channelname = document.querySelector("#channelname");
         if (validateInput(channelname, 3, true)) {
-            createChannel(channelname.value);    
-            } else {
+            createChannel(channelname.value);
+        } else {
             channelname.className = "form-control is-invalid";
             var alertfeeback = document.querySelector("#channelError");
             alertfeeback.innerHTML = "Only alphanumeric and at least 4 characters!";
         }
         function createChannel(channelname) {
-            
+
             const Http = new XMLHttpRequest();
-            const url = '/createchannel?channelname='+channelname;
+            const url = '/createchannel?channelname=' + channelname;
             Http.open("GET", url);
-            //const formdata = new FormData();
-            //formdata.append('channelname', channelname);
             Http.send();
             Http.onload = () => {
                 const data = JSON.parse(Http.responseText);
-                //console.log(data);
                 if (data.success) {
                     getChannels();
                     $('#channelEntry').modal('hide');
@@ -88,21 +87,52 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('#channellist').innerHTML = "";
             for (var key in data) {
                 var active = "";
+                var unreadvisible = "visible";
                 if (currentChannel == data[key].id) {
                     active = "active";
                 }
-                const content = template({ 'channelurl': data[key].id, 'channelname': data[key].channel, 'unreadmessages': 0, 'isactive': active });
+                var channelUnread = localStorage.getItem(data[key].id);
+                if (channelUnread == 0 || channelUnread == null) {
+                    unreadvisible = "invisible";
+                }
+                const content = channelTemplate({ 'channelurl': data[key].id, 'channelname': data[key].channel, 'unreadmessages': channelUnread, 'isactive': active, 'visibility': unreadvisible });
                 document.querySelector('#channellist').innerHTML += content;
             }
             document.querySelectorAll('.list-group-item').forEach(button => {
                 button.onclick = () => {
                     localStorage.setItem("channel", button.dataset.channel);
                     getChannels();
+                    loadChannelMessages(button.dataset.channel);
+                    if (window.screen.width < 768) {
+                        $('.collapse').collapse("toggle");
+                    }
                 };
             });
         };
 
     };
+
+    function loadChannelMessages(channel) {
+        document.querySelector('#messagebox').innerHTML = "";
+        const Http = new XMLHttpRequest();
+        const url = '/getmessages?channel=' + channel;
+        Http.open("GET", url);
+        Http.send();
+        Http.onload = () => {
+            const data = JSON.parse(Http.responseText);
+            for (var k in data) {
+                publishMessage(data[k].username, data[k].message, data[k].timestamp)
+            }
+        }
+        localStorage.setItem(channel, 0);
+    }
+
+    function publishMessage(username, message, timestamp) {
+        const content = messageTemplate({ 'username': username, 'message': message, 'timestamp': timestamp });
+        var messagesDiv = document.querySelector('#messagebox');
+        messagesDiv.innerHTML += content;
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
     // Connect to websocket
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
@@ -136,6 +166,14 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector("#sendmessage").onclick = () => {
             txMessage();
         };
+
+        // Detect if screen is clicked and collape menu on mobile
+        $('#messagebox').click(function () {
+            if (window.screen.width < 768) {
+                $('.collapse').collapse("toggle");
+            }
+        });
+
         //Detect Enter Key press
         document.addEventListener('keypress', () => {
             if (event.key === "Enter") {
@@ -150,25 +188,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         //var username = localStorage.getItem("username");
         var username = data.username;
-        //TODO
-
-        function createDiv() {
-            var newDiv = document.createElement("div");
-            newDiv.className = "alert alert-primary mt-2 mb-0 publishedmessage"
-            newDiv.innerHTML = `<h6 class="alert-heading">${username}</h6> ${data.message}`;
-            return newDiv
+        var currentChannel = localStorage.getItem("channel");
+        if (data.channel == currentChannel) {
+            publishMessage(username, data.message, data.timestamp);
+        } else {
+            var channelUnread = localStorage.getItem(data.channel);
+            channelUnread++;
+            localStorage.setItem(data.channel, channelUnread);
+            var DOMunread = document.querySelector("#ch" + data.channel);
+            DOMunread.className = "badge badge-danger badge-pill d-flex justify-content-between align-items-center visible"
+            DOMunread.innerHTML = channelUnread;
         }
-
-        function rxMessage() {
-            var messages = message = document.querySelectorAll(".publishedmessage");
-            var lastmessage = messages[messages.length];
-            var parentDiv = document.getElementById("messagebox");
-            parentDiv.insertBefore(createDiv(), lastmessage);
-            parentDiv.scrollTop = parentDiv.scrollHeight;
-        }
-
-        rxMessage();
-
     });
     getChannels();
 });
